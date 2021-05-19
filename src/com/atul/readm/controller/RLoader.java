@@ -30,7 +30,11 @@ class RLoader {
 				String title = manga.select("div[class=subject-title]").select("a").attr("title");
 				String url = manga.select("div[class=subject-title]").select("a").attr("href");
 				String summary = manga.select("p[class=desktop-only excerpt]").text();
-				String rating = manga.select("div[class=color-imdb]").text().split(" ")[1];
+				String[] data = manga.select("div[class=color-imdb]").text().split(" ");
+				String rating = null;
+				if(data.length > 2)
+					rating = data[1];
+				
 				String art = manga.select("div[class=poster-with-subject]").select("img").attr("src");
 				List<String> tags = new ArrayList<>();
 

@@ -7,7 +7,7 @@ class RApiBuilder {
 	}
 
 	public static String buildCatBrowse(int page, String genre) {
-		return String.format(RConstants.BROWSE_CAT, genre, page);
+		return String.format(RConstants.BROWSE_CAT, RConstants.getGenres().get(genre), page);
 	}
 
 	public static String buildeMangaChapter(String mangaUrl) {
