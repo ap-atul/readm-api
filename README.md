@@ -59,7 +59,3 @@ public void setPages(Chapter pages) {
     }
 }
 ```
-
-## Todo
-* Scrapping the searching api
-* Cloudflare interceptor required
