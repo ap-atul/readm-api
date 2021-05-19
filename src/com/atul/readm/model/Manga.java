@@ -8,7 +8,7 @@ public class Manga {
 	public String url;
 	public String chapter;
 	public String rating;
-	
+
 	/* more details */
 	public String status;
 	public String summary;
@@ -16,7 +16,7 @@ public class Manga {
 	public String authorUrl;
 	public List<String> tags;
 	public List<Chapter> chapters;
-	
+
 	public Manga(String title, String url, String summary, String rating, String art, List<String> tags) {
 		super();
 

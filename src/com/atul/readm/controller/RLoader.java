@@ -2,8 +2,11 @@ package com.atul.readm.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
@@ -22,7 +25,7 @@ class RLoader {
 			else
 				pageUrl = RApiBuilder.buildCatBrowse(page, genre);
 
-			Element doc = Jsoup.connect(pageUrl).get().body();
+			Element doc = Jsoup.connect(pageUrl).userAgent(RConstants.USER_AGENT).get().body();
 			for (Element manga : doc.select("li[class=mb-lg]")) {
 				String title = manga.select("div[class=subject-title]").select("a").attr("title");
 				String url = manga.select("div[class=subject-title]").select("a").attr("href");
@@ -51,7 +54,8 @@ class RLoader {
 
 		try {
 
-			Element doc = Jsoup.connect(RApiBuilder.buildCombo(manga.url)).get().body();
+			Element doc = Jsoup.connect(RApiBuilder.buildCombo(manga.url)).userAgent(RConstants.USER_AGENT).get()
+					.body();
 			for (Element chp : doc.select("section[class=episodes-box]")
 					.select("table[class=ui basic unstackable table]")) {
 				String title = chp.select("a").text();
@@ -74,7 +78,8 @@ class RLoader {
 
 		try {
 
-			Element doc = Jsoup.connect(RApiBuilder.buildCombo(chapter.url)).get().body();
+			Element doc = Jsoup.connect(RApiBuilder.buildCombo(chapter.url)).userAgent(RConstants.USER_AGENT).get()
+					.body();
 			for (Element pg : doc.select("img[class=img-responsive scroll-down]")) {
 				String page = pg.attr("src");
 				pages.add(page);
@@ -85,6 +90,48 @@ class RLoader {
 		}
 		chapter.pages = pages;
 		return chapter;
+	}
+
+	public static List<Manga> search(String query) {
+		List<Manga> mangaList = new ArrayList<>();
+
+		try {
+
+			HashMap<String, String> data = new HashMap<>();
+			data.put("dataType", "json");
+			data.put("phrase", "demons");
+
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put("X-Requested-With", "XMLHttpRequest");
+			String doc = Jsoup.connect("https://www.readm.org/service/search").timeout(RConstants.TIMEOUT)
+					.userAgent(RConstants.USER_AGENT).ignoreHttpErrors(true).headers(headers).data(data)
+					.ignoreContentType(true).post().select("body").text().toString();
+
+			JSONObject json = new JSONObject(doc);
+			JSONArray array = json.getJSONArray("manga");
+
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject obj = array.getJSONObject(i);
+				String title = null, url = null, art = null;
+
+				if (obj.has("title"))
+					title = obj.getString("title");
+
+				if (obj.has("url"))
+					url = obj.getString("url");
+
+				if (obj.has("image"))
+					art = obj.getString("image");
+
+				Manga m = new Manga(title, url, null, "0", art, null);
+				mangaList.add(m);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mangaList;
 	}
 
 }

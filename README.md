@@ -19,6 +19,9 @@ class Sample implements RListener {
 // browse the pages, with page no and genre
 client.browse(1, null);
 
+// search by keyword
+client.search(<your query>);
+
 // to get all chapters for certain manga
 client.chapters(manga);
 

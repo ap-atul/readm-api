@@ -15,6 +15,12 @@ class RConstants {
 	// string format [manga url, page no]
 	public static final String CHAPTER_URL = "https://www.readm.org/%s/%d/all-pages";
 
+	// user agent
+	public static final String USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201";
+
+	// time out
+	public static final int TIMEOUT = 10000;
+
 	// all genres
 	public static final HashMap<String, String> getGenres() {
 		HashMap<String, String> genres = new HashMap<>();
