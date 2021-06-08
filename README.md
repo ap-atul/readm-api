@@ -59,3 +59,7 @@ public void setPages(Chapter pages) {
     }
 }
 ```
+
+4. Use with Android
+* For use with Android, make use of ```LiveData``` or ```BroadcastReceiver``` to get reponse from the api. 
+* All variabls for model are public, so just use object.variable_name
