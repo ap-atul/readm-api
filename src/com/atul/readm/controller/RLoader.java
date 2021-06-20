@@ -32,7 +32,7 @@ class RLoader {
 				String summary = manga.select("p[class=desktop-only excerpt]").text();
 				String[] data = manga.select("div[class=color-imdb]").text().split(" ");
 				String rating = null;
-				if(data.length > 2)
+				if(data.length >= 2)
 					rating = data[1];
 				
 				String art = manga.select("div[class=poster-with-subject]").select("img").attr("src");
@@ -55,11 +55,16 @@ class RLoader {
 
 	public static Manga getChapters(Manga manga) {
 		List<Chapter> chapterList = new ArrayList<>();
+		String author = null, status = null;
 
 		try {
 
 			Element doc = Jsoup.connect(RApiBuilder.buildCombo(manga.url)).userAgent(RConstants.USER_AGENT).get()
 					.body();
+			
+			author = doc.select("div[class=sub-title pt-sm]").text();
+			status = doc.select("span[class=series-status aqua]").text();
+			
 			for (Element chp : doc.select("section[class=episodes-box]")
 					.select("table[class=ui basic unstackable table]")) {
 				String title = chp.select("a").text();
@@ -74,6 +79,9 @@ class RLoader {
 			e.printStackTrace();
 		}
 		manga.chapters = chapterList;
+		manga.author = author;
+		manga.status = status;
+		manga.chapter = String.valueOf(chapterList.size());
 		return manga;
 	}
 
@@ -103,7 +111,7 @@ class RLoader {
 
 			HashMap<String, String> data = new HashMap<>();
 			data.put("dataType", "json");
-			data.put("phrase", "demons");
+			data.put("phrase", query);
 
 			HashMap<String, String> headers = new HashMap<>();
 			headers.put("X-Requested-With", "XMLHttpRequest");
